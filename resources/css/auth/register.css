@@ -1,0 +1,346 @@
+/* ============================================================
+   auth/register.css — dispatcher registration page styles
+   Mirrors login.css structure exactly.
+   Shared classes (form-group, form-label, form-input)
+   are defined in login.css — do not redefine here.
+   ============================================================ */
+
+/* ── Page layout ── */
+.register-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--color-beige-light);
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+}
+
+/* ── Left branding panel ── */
+.register-panel-left {
+    background: var(--color-beige-mid);
+    border-right: 1px solid var(--color-beige-dark);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem 3.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.register-panel-left::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    border: 60px solid var(--color-beige-dark);
+    opacity: 0.5;
+}
+
+.register-panel-left::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    left: -40px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 40px solid var(--color-silver);
+    opacity: 0.3;
+}
+
+/* ── Brand mark ── */
+.register-brand {
+    position: relative;
+    z-index: 1;
+}
+
+.register-brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 3rem;
+}
+
+.register-brand-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--color-charcoal);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.register-brand-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--color-beige-light);
+}
+
+.register-brand-name {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+}
+
+/* ── Tagline ── */
+.register-tagline {
+    font-size: 2.4rem;
+    font-weight: 300;
+    line-height: 1.25;
+    color: var(--color-text-primary);
+    margin-bottom: 1.5rem;
+}
+
+.register-tagline strong {
+    font-weight: 500;
+}
+
+.register-sub-tagline {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    max-width: 320px;
+}
+
+/* ── Role info card ── */
+.register-role-info {
+    position: relative;
+    z-index: 1;
+    background: var(--color-beige-dark);
+    border: 1px solid var(--color-silver);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+}
+
+.register-role-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.4rem;
+}
+
+.register-role-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    letter-spacing: 0.03em;
+    margin-bottom: 0.5rem;
+}
+
+.register-role-desc {
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}
+
+.register-role-permissions {
+    margin-top: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.register-role-permission {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.register-role-permission::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-silver-dark);
+    flex-shrink: 0;
+}
+
+/* ── Right form panel ── */
+.register-panel-right {
+    background: var(--color-white);
+    display: flex;
+    flex-direction: column;      /* add this */
+    align-items: center;         /* add this */
+    justify-content: center;
+    padding: 2rem 3rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04),
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                0 2px 4px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.register-panel-right:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.08),
+                0 20px 40px rgba(0, 0, 0, 0.12),
+                0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.register-box {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-beige-dark);
+    padding: 2.5rem;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.04),
+        0 10px 30px rgba(0, 0, 0, 0.08),
+        0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+/* ── Form header ── */
+.register-form-header {
+    margin-bottom: 2rem;
+}
+
+.register-form-header h1 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    letter-spacing: 0.02em;
+    margin-bottom: 0.4rem;
+}
+
+.register-form-header p {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.register-form-divider {
+    width: 36px;
+    height: 2px;
+    background: var(--color-silver-dark);
+    margin-top: 1rem;
+}
+
+/* ── Role pill ── */
+.register-role-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--color-grey-light);
+    border: 1px solid var(--color-beige-dark);
+    border-radius: 20px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.register-role-pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-silver-dark);
+}
+
+/* ── Error message ── */
+.register-error {
+    background: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    border-radius: var(--radius-md);
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    color: var(--color-error-text);
+    margin-bottom: 1.25rem;
+}
+
+/* ── Form hint ── */
+.form-hint {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 0.35rem;
+}
+
+/* ── Submit button ── */
+.btn-register {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.85rem 1.5rem;
+    background: var(--color-charcoal);
+    color: var(--color-beige-light);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background var(--transition-fast),
+                transform  var(--transition-fast);
+}
+
+.btn-register:hover  { background: #1A1918; }
+.btn-register:active { transform: scale(0.99); }
+
+.btn-register svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+/* ── Sign in link ── */
+.register-signin {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-grey-light);
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+}
+
+.register-signin a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-beige-dark);
+    padding-bottom: 1px;
+    transition: color var(--transition-fast),
+                border-color var(--transition-fast);
+}
+
+.register-signin a:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-silver-dark);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .register-page          { grid-template-columns: 1fr; }
+    .register-panel-left    { display: none; }
+    .register-panel-right   { padding: 2rem 1.5rem; }
+}
+
+.register-box .form-input {
+    width: 100%;
+    box-sizing: border-box;
+}

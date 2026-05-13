@@ -1,0 +1,407 @@
+/* ============================================================
+   layouts/app.css — authenticated shell
+   ============================================================ */
+
+/* ── Shell ── */
+.app-shell {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: 100vh;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--color-beige-light);
+    font-family: var(--font-body);
+}
+
+/* ── Sidebar ── */
+.sidebar {
+    background: var(--color-white);
+    border-right: 1px solid var(--color-beige-dark);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    z-index: 10;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1.5rem 1.25rem;
+    border-bottom: 1px solid var(--color-beige-dark);
+}
+
+.sidebar-brand-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--color-charcoal);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.sidebar-brand-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--color-beige-light);
+}
+
+.sidebar-brand-name {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+}
+
+/* ── Nav sections ── */
+.sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+    overflow-y: auto;
+}
+
+.sidebar-section {
+    margin-bottom: 0.25rem;
+}
+
+.sidebar-section-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    padding: 0.75rem 1.25rem 0.35rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: background var(--transition-fast),
+                color var(--transition-fast),
+                border-color var(--transition-fast);
+    position: relative;
+}
+
+.sidebar-link:hover {
+    background: var(--color-beige-light);
+    color: var(--color-text-primary);
+}
+
+.sidebar-link.active {
+    background: var(--color-beige-mid);
+    color: var(--color-text-primary);
+    border-left-color: var(--color-charcoal);
+    font-weight: 500;
+}
+
+.sidebar-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ── Badge on sidebar link (e.g. unassigned count) ── */
+.sidebar-badge {
+    margin-left: auto;
+    background: var(--color-charcoal);
+    color: var(--color-beige-light);
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 20px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.sidebar-badge.urgent {
+    background: var(--color-error-border);
+    color: var(--color-white);
+}
+
+/* ── Sidebar footer (user info) ── */
+.sidebar-footer {
+    border-top: 1px solid var(--color-beige-dark);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-silver);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    flex-shrink: 0;
+}
+
+.sidebar-user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar-user-name {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-user-role {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    text-transform: capitalize;
+}
+
+.sidebar-logout {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.sidebar-logout:hover {
+    background: var(--color-beige-light);
+    color: var(--color-text-primary);
+}
+
+.sidebar-logout svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ── Main area ── */
+.app-main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ── Topbar ── */
+.topbar {
+    height: 56px;
+    min-height: 56px;
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-beige-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.75rem;
+    gap: 1rem;
+}
+
+.topbar-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    letter-spacing: 0.01em;
+}
+
+.topbar-breadcrumb {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* ── Topbar icon button ── */
+.topbar-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    position: relative;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.topbar-btn:hover {
+    background: var(--color-beige-light);
+    color: var(--color-text-primary);
+}
+
+.topbar-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ── Notification dot ── */
+.notif-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-error-border);
+    border: 1.5px solid var(--color-white);
+}
+
+/* ── Notification dropdown ── */
+.notif-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 320px;
+    background: var(--color-white);
+    border: 1px solid var(--color-beige-dark);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+    z-index: 100;
+    overflow: hidden;
+    display: none;
+}
+
+.notif-dropdown.open { display: block; }
+
+.notif-dropdown-header {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--color-beige-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.notif-dropdown-title {
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-primary);
+}
+
+.notif-mark-all {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-beige-dark);
+    cursor: pointer;
+}
+
+.notif-item {
+    display: flex;
+    gap: 10px;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-grey-light);
+    transition: background var(--transition-fast);
+    cursor: pointer;
+}
+
+.notif-item:hover { background: var(--color-beige-light); }
+
+.notif-item.unread { background: var(--color-beige-light); }
+
+.notif-item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-beige-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.notif-item-icon svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--color-text-secondary);
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.notif-item-icon.urgent { background: var(--color-error-bg); }
+.notif-item-icon.urgent svg { stroke: var(--color-error-text); }
+
+.notif-item-body { flex: 1; min-width: 0; }
+
+.notif-item-text {
+    font-size: 0.82rem;
+    color: var(--color-text-primary);
+    line-height: 1.4;
+    margin-bottom: 2px;
+}
+
+.notif-item-time {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+}
+
+.notif-dropdown-footer {
+    padding: 0.6rem 1rem;
+    text-align: center;
+}
+
+.notif-view-all {
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-beige-dark);
+}
+
+/* ── Page content area ── */
+.app-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.75rem;
+    background: var(--color-beige-light);
+}

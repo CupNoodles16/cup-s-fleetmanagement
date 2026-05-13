@@ -1,0 +1,52 @@
+    /* ============================================================
+   variables.css — shared design tokens
+   Import this first in app.css
+   ============================================================ */
+
+:root {
+    /* Background layers */
+    --color-beige-light:    #F5F2EC;
+    --color-beige-mid:      #EAE5DA;
+    --color-beige-dark:     #D6CFBF;
+
+    /* Borders / silver */
+    --color-silver:         #C8C5BE;
+    --color-silver-dark:    #A8A49C;
+
+    /* Neutral surfaces */
+    --color-grey-light:     #F0EFED;
+    --color-grey-mid:       #7A7874;
+
+    /* Text */
+    --color-text-primary:   #1C1B19;
+    --color-text-secondary: #6A6762;
+    --color-text-muted:     #9A9790;
+
+    /* Base */
+    --color-white:          #FFFFFF;
+    --color-charcoal:       #2A2926;
+
+    /* Semantic */
+    --color-error-bg:       #FBF0EE;
+    --color-error-border:   #E8C8C0;
+    --color-error-text:     #8B3A2A;
+
+    /* Typography */
+    --font-display:  'Barlow Condensed', sans-serif;
+    --font-body:     'Outfit', sans-serif;
+
+    /* Radii */
+    --radius-sm:  4px;
+    --radius-md:  6px;
+    --radius-lg:  10px;
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
