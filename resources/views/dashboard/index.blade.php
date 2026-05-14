@@ -38,7 +38,7 @@
 <div class="dashboard-grid">
 
     {{-- Left: active loads + order queue --}}
-    <div style="display:flex;flex-direction:column;gap:1rem;">
+    <div class="dashboard-left">
 
         <div class="panel">
             <div class="panel-header">
@@ -70,11 +70,14 @@
                 <span class="panel-title">Unassigned orders</span>
                 <a href="{{ route('orders.index') }}" class="panel-action">View all</a>
             </div>
-            <div>
+            <div class="queue-list">
                 @forelse($pendingOrders as $order)
                 <div class="queue-item">
                     <div class="queue-item-info">
-                        <div class="queue-item-id">{{ $order->order_number }} <span class="status-badge {{ $order->priority }}">{{ ucfirst($order->priority) }}</span></div>
+                        <div class="queue-item-id">
+                            {{ $order->order_number }}
+                            <span class="status-badge {{ $order->priority }}">{{ ucfirst($order->priority) }}</span>
+                        </div>
                         <div class="queue-item-route">{{ $order->cargo_description }} · {{ number_format($order->weight_kg) }} kg</div>
                     </div>
                     <button class="queue-assign-btn"
@@ -87,7 +90,6 @@
                 @endforelse
             </div>
         </div>
-
     </div>
 
     {{-- Right: notifications panel --}}

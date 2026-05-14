@@ -87,4 +87,9 @@ class User extends Authenticatable
     {
         return $this->role === 'superadmin';
     }
+
+    public function employeeProfile()
+    {
+        return $this->hasOne(EmployeeProfile::class);
+    }
 }
