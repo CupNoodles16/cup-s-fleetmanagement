@@ -279,7 +279,7 @@
             <div class="form-actions">
                 <div class="action-group">
                     <a href="{{ route('dashboard') }}" class="btn-secondary">Cancel</a>
-                    <button type="button" class="btn-primary" onclick="showConfirmationModal()">
+                    <button type="button" class="btn-primary" onclick="showRegistrationModal()">
                         Create Account
                     </button>
                 </div>
@@ -288,48 +288,120 @@
     </div>
 </div>
 
-{{-- Modal Component --}}
-<x-confirmation-modal
-    id="register-modal"
-    title="Create Dispatcher Account"
-    message="Please review all information carefully before submitting. You won't be able to edit this information later without administrator approval."
-    confirmText="Create Account"
-    cancelText="Review Again" />
+{{-- Include the custom register modal component --}}
+<x-register-modal />
 
 <script>
-    // Store modal instance globally
-    let confirmationModal = null;
-
-    // Wait for DOM to load and initialize modal reference
-    document.addEventListener('DOMContentLoaded', function() {
-        const modalElement = document.querySelector('#register-modal');
-        if (modalElement && modalElement.__x) {
-            confirmationModal = modalElement.__x.$data;
+    // Show a single client-side error message
+    function showClientError(message) {
+        let errorDiv = document.querySelector('.register-error');
+        if (!errorDiv) {
+            const form = document.getElementById('registerForm');
+            errorDiv = document.createElement('div');
+            errorDiv.className = 'register-error';
+            form.insertBefore(errorDiv, form.firstChild);
         }
-    });
+        errorDiv.innerHTML = `<div>${message}</div>`;
+        errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 
-    // Show confirmation modal before submit
-    async function showConfirmationModal() {
-        // If modal not loaded yet, try to get it
-        if (!confirmationModal) {
-            const modalElement = document.querySelector('#register-modal');
-            if (modalElement && modalElement.__x) {
-                confirmationModal = modalElement.__x.$data;
-            } else {
-                // Fallback: submit directly
-                prepareAndSubmit();
-                return;
+    function clearClientErrors() {
+        const errorDiv = document.querySelector('.register-error');
+        if (errorDiv) errorDiv.innerHTML = '';
+    }
+
+    // Validate only required fields (generic) + password match (specific)
+    function validateForm() {
+        clearClientErrors();
+
+        // Helper to check if a field is empty
+        const isEmpty = (val) => val === null || val.trim() === '';
+
+        // Gather all required field values
+        const surname = document.getElementById('surname').value;
+        const firstName = document.getElementById('first_name').value;
+        const birthDate = document.getElementById('birth_date').value;
+        const sex = document.getElementById('sex').value;
+        const maritalStatus = document.getElementById('marital_status').value;
+        const phoneRaw = document.getElementById('phone_number').value;
+        const address = document.getElementById('address').value;
+        const emergencyName = document.getElementById('emergency_contact_name').value;
+        const emergencyRelationship = document.getElementById('emergency_contact_relationship').value;
+        const emergencyPhoneRaw = document.getElementById('emergency_contact_number').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('password_confirmation').value;
+
+        // Check each required field (including format validations as part of required)
+        let hasRequiredError = false;
+
+        // Required text / date / select fields
+        if (isEmpty(surname)) hasRequiredError = true;
+        else if (isEmpty(firstName)) hasRequiredError = true;
+        else if (isEmpty(birthDate)) hasRequiredError = true;
+        else if (isEmpty(sex)) hasRequiredError = true;
+        else if (isEmpty(maritalStatus)) hasRequiredError = true;
+        else if (isEmpty(phoneRaw)) hasRequiredError = true;
+        else if (isEmpty(address)) hasRequiredError = true;
+        else if (isEmpty(emergencyName)) hasRequiredError = true;
+        else if (isEmpty(emergencyRelationship)) hasRequiredError = true;
+        else if (isEmpty(emergencyPhoneRaw)) hasRequiredError = true;
+        else if (isEmpty(email)) hasRequiredError = true;
+        else if (isEmpty(password)) hasRequiredError = true;
+        else if (isEmpty(confirmPassword)) hasRequiredError = true;
+
+        // Format validations (still result in generic message)
+        if (!hasRequiredError) {
+            const phoneDigits = phoneRaw.replace(/\D/g, '');
+            if (phoneDigits.length !== 10) hasRequiredError = true;
+            const emergencyDigits = emergencyPhoneRaw.replace(/\D/g, '');
+            if (emergencyDigits.length !== 10) hasRequiredError = true;
+            if (!/^\S+@\S+\.\S+$/.test(email)) hasRequiredError = true;
+            if (password.length < 8) hasRequiredError = true;
+
+            // Age validation (18+)
+            if (birthDate) {
+                const age = calculateAgeFromDate(birthDate);
+                if (age === null || age < 18) hasRequiredError = true;
             }
         }
 
-        const confirmed = await confirmationModal.open();
+        // Specific password match check
+        const passwordMatch = (password === confirmPassword);
 
-        if (confirmed) {
-            prepareAndSubmit();
+        if (!passwordMatch) {
+            showClientError('Passwords do not match.');
+            return false;
         }
+
+        if (hasRequiredError) {
+            showClientError('Please fill the required fields indicated with (*).');
+            return false;
+        }
+
+        return true;
     }
 
-    // Prepare phone numbers and submit form
+    function calculateAgeFromDate(dateStr) {
+        if (!dateStr) return null;
+        const birth = new Date(dateStr);
+        const today = new Date();
+        let age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+        return (age >= 0 && age < 120) ? age : null;
+    }
+
+    // Show modal only after validation passes
+    function showRegistrationModal() {
+        if (!validateForm()) {
+            return;
+        }
+        window.registerModal.open(function() {
+            prepareAndSubmit();
+        });
+    }
+
     function prepareAndSubmit() {
         var phone = document.getElementById('phone_number');
         var ePhone = document.getElementById('emergency_contact_number');
@@ -341,11 +413,10 @@
             ePhone.value = '+63' + ePhone.value;
         }
 
-        // Submit the form
         document.getElementById('registerForm').submit();
     }
 
-    // Auto-calculate age from birth date
+    // Auto-calculate age from birth date (display only)
     function calcAge(dateStr) {
         var el = document.getElementById('age_display');
         if (!dateStr) { el.value = ''; return; }
@@ -357,7 +428,7 @@
         el.value = (age > 0 && age < 120) ? age + ' yrs' : '';
     }
 
-    // Show file preview
+    // File preview
     function previewFile(input, previewId) {
         var preview = document.getElementById(previewId);
         if (!preview) return;
@@ -378,7 +449,7 @@
         reader.readAsDataURL(file);
     }
 
-    // Calculate age on page load if old() has a birth_date (validation re-display)
+    // Initial age calculation if old birth date exists
     (function() {
         var bd = document.getElementById('birth_date');
         if (bd && bd.value) calcAge(bd.value);
