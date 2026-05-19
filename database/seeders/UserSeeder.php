@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
     {
         // Superadmin
         $superadmin = User::firstOrCreate(
-            ['email' => 'superadmin@truckdispatch.test'],
+            ['email' => 'superadmin@cupnoodles.com'],
             [
                 'name'              => 'Super Admin',
                 'password'          => Hash::make('password'),
@@ -25,8 +25,8 @@ class UserSeeder extends Seeder
 
         // Dispatchers
         $dispatchers = [
-            ['name' => 'Maria Santos',  'email' => 'maria@truckdispatch.test'],
-            ['name' => 'Jose Reyes',    'email' => 'jose@truckdispatch.test'],
+            ['name' => 'Maria Santos',  'email' => 'maria@truckdispatch.com'],
+            ['name' => 'Jose Reyes',    'email' => 'jose@truckdispatch.com'],
         ];
 
         foreach ($dispatchers as $data) {
@@ -45,10 +45,10 @@ class UserSeeder extends Seeder
 
         // Drivers — corresponding Driver records created in DriverSeeder
         $drivers = [
-            ['name' => 'Ramon Dela Cruz',   'email' => 'ramon@truckdispatch.test'],
-            ['name' => 'Eduardo Villanueva','email' => 'eduardo@truckdispatch.test'],
-            ['name' => 'Danilo Bautista',   'email' => 'danilo@truckdispatch.test'],
-            ['name' => 'Fernando Aquino',   'email' => 'fernando@truckdispatch.test'],
+            ['name' => 'Ramon Dela Cruz',   'email' => 'ramon@truckdispatch.com'],
+            ['name' => 'Eduardo Villanueva','email' => 'eduardo@truckdispatch.com'],
+            ['name' => 'Danilo Bautista',   'email' => 'danilo@truckdispatch.com'],
+            ['name' => 'Fernando Aquino',   'email' => 'fernando@truckdispatch.com'],
         ];
 
         foreach ($drivers as $data) {
@@ -67,8 +67,8 @@ class UserSeeder extends Seeder
 
         // Customers — corresponding Customer records created in CustomerSeeder
         $customers = [
-            ['name' => 'Ana Mercado',   'email' => 'ana@testcustomer.test'],
-            ['name' => 'Carlo Lim',     'email' => 'carlo@testcustomer.test'],
+            ['name' => 'Ana Mercado',   'email' => 'ana@testcustomer.com'],
+            ['name' => 'Carlo Lim',     'email' => 'carlo@testcustomer.com'],
         ];
 
         foreach ($customers as $data) {

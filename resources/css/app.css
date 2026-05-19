@@ -13,3 +13,6 @@
 
 /* ── Pages ── */
 @import './dashboard/dashboard.css';
+
+/* ── Dispatch ── */
+@import './dispatch/board.css';

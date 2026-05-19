@@ -22,7 +22,9 @@
     @include('layouts.partials.sidebar')
 
     <div class="app-main">
-        @include('layouts.partials.topbar')
+        @if(!isset($hideTopbar) || !$hideTopbar)
+            @include('layouts.partials.topbar')
+        @endif
         <main class="app-content">
             @yield('content')
         </main>

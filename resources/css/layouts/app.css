@@ -5,7 +5,7 @@
 /* ── Shell ── */
 .app-shell {
     display: grid;
-    grid-template-columns: 265px 1fr;
+    grid-template-columns: 285px 1fr;
     grid-template-rows: 100vh;
     height: 100vh;
     overflow: hidden;
@@ -25,7 +25,7 @@
     overflow-x: hidden;
     position: relative;
     z-index: 10;
-    width: 285px;
+    /*width: 285px;
 
     /* Hide scrollbar — all browsers */
     scrollbar-width: none;
