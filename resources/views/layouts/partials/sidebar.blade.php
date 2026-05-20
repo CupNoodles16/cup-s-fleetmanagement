@@ -2,6 +2,16 @@
 
     <div class="sidebar-brand">
         <span class="sidebar-brand-name">TruckDispatch</span>
+        <button class="sidebar-toggle" id="sidebar-toggle" title="Collapse sidebar">
+            <span class="toggle-arrow">←</span>
+        </button>
+    </div>
+
+    <div class="sidebar-collapsed-expand" id="sidebar-collapsed-expand" style="display: none;">
+        <button class="sidebar-expand-vertical" title="Expand sidebar">
+            <span class="expand-arrow">→</span>
+            <span class="expand-text">Click to Expand Sidebar</span>
+        </button>
     </div>
 
     <nav class="sidebar-nav">
@@ -18,7 +28,8 @@
         {{-- Dispatch --}}
         <div class="sidebar-section">
             <span class="sidebar-section-label">Dispatch</span>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('dispatch.index') }}"
+            class="sidebar-link {{ request()->routeIs('dispatch.*') ? 'active' : '' }}">
                 Dispatch Board
                 @if($unassignedCount > 0)
                     <span class="sidebar-badge {{ $unassignedCount > 5 ? 'urgent' : '' }}">

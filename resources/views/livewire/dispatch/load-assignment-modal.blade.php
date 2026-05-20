@@ -83,7 +83,6 @@ new class extends Component {
         return Driver::query()
             ->with([
                 'user:id,name',
-                'phone',
                 'currentVehicle:id,plate_number,type,capacity_kg',
             ])
             ->select([

@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 new class extends Component {
 
-    public int  $count       = 0;
-    public bool $visible     = false;
-    public bool $dropdownOpen = false;
+    public int  $count   = 0;
+    public bool $visible = false;
 
     public function mount(): void
     {
@@ -39,6 +38,11 @@ new class extends Component {
                   ->orWhere(function ($q) {
                       $q->where('is_delayed', true)
                         ->where('delay_minutes', '>=', 30);
+                  })
+                  ->orWhere(function ($q) {
+                      $q->whereNotNull('eta_at')
+                        ->where('eta_at', '<', now())
+                        ->whereNotIn('status', ['delivered','cancelled']);
                   });
             })
             ->whereNotIn('status', ['delivered', 'cancelled'])
@@ -53,9 +57,6 @@ new class extends Component {
 
         if ($this->count > 0) {
             $this->visible = true;
-
-            // If count increased dispatch browser event to trigger
-            // slide-in + pulse animation via board.js
             if ($this->count > $previousCount) {
                 $this->dispatch('exception-detected');
             }
@@ -65,22 +66,21 @@ new class extends Component {
         }
     }
 
-    public function toggleDropdown(): void
-    {
-        $this->dropdownOpen = !$this->dropdownOpen;
-    }
-
     public function formatIssue(string $status, bool $isDelayed, ?int $delayMinutes): string
     {
         if ($status === 'failed') {
-            return 'Load failed — requires attention';
+            return 'Load failed — requires immediate attention';
+        }
+
+        if ($isDelayed && $delayMinutes >= 60) {
+            return "Severely delayed — {$delayMinutes} minutes late";
         }
 
         if ($isDelayed && $delayMinutes) {
             return "Delayed by {$delayMinutes} minutes";
         }
 
-        return 'Exception reported';
+        return 'Overdue — past expected delivery time';
     }
 
     public function formatTime(string $updatedAt): string
@@ -88,88 +88,71 @@ new class extends Component {
         return \Carbon\Carbon::parse($updatedAt)->format('h:i A');
     }
 
-}; ?>
-
-{{--
-    Exception pill — only renders when count > 0.
-    Visibility and animation are controlled by:
-    - CSS classes .visible and .pulse on the pill element
-    - board.js listens for exception-detected and exceptions-cleared
-      browser events and toggles those classes
-    The pill itself is always in the DOM when count > 0 so Livewire
-    can update the count without re-triggering the slide animation
-    on every poll cycle. The animation only fires when count increases.
---}}
+};
+?>
 
 <div class="exception-pill-wrap" wire:poll.15s="refresh">
 
     @if($visible)
-        <button
-            class="exception-pill visible {{ $count > 0 ? 'pulse' : '' }}"
-            wire:click="toggleDropdown"
-            x-data
-            @click.outside="$wire.dropdownOpen = false">
 
-            <span class="exception-pill-icon">⚠</span>
-            {{ $count }} {{ $count === 1 ? 'Exception' : 'Exceptions' }}
+        <div x-data="{ open: false }"
+            @click.outside="open = false"
+            wire:ignore.self
+            style="position:relative;display:inline-flex;">
 
-            {{-- Dropdown --}}
-            @if($dropdownOpen)
-                <div class="exception-dropdown open"
-                     @click.stop>
+            <button
+                class="exception-pill visible {{ $count > 0 ? 'pulse' : '' }}"
+                @click.stop="open = !open">
+                <span class="exception-pill-icon">⚠</span>
+                {{ $count }} {{ $count === 1 ? 'Exception' : 'Exceptions' }}
+            </button>
 
-                    <div class="exception-dropdown-header">
-                        Active Exceptions
-                    </div>
+            <div x-show="open"
+                 class="exception-dropdown open"
+                 @click.stop
+                 style="display:none;">
 
-                    @foreach($this->exceptions as $exception)
-                        <div class="exception-item"
-                             wire:key="exc-{{ $exception->id }}">
-
-                            <div class="exception-item-top">
-                                <span class="exception-item-id">
-                                    {{ $exception->load_number }}
-                                </span>
-                                <span class="exception-item-time">
-                                    {{ $this->formatTime($exception->updated_at) }}
-                                </span>
-                            </div>
-
-                            <div class="exception-item-issue">
-                                {{ $this->formatIssue(
-                                    $exception->status,
-                                    $exception->is_delayed,
-                                    $exception->delay_minutes
-                                ) }}
-                            </div>
-
-                            <div class="exception-item-driver">
-                                {{ $exception->driver?->user?->name ?? 'Unassigned' }}
-                                @if($exception->driver?->phone)
-                                    · {{ $exception->driver->phone }}
-                                @endif
-                            </div>
-
-                            <div class="exception-item-actions">
-                                <button class="exception-action-btn"
-                                    wire:click="$dispatch('open-assignment-modal',
-                                        { loadId: {{ $exception->id }} })">
-                                    Reassign
-                                </button>
-                                <button class="exception-action-btn"
-                                    wire:click="$dispatch('contact-driver',
-                                        { loadId: {{ $exception->id }} })">
-                                    Contact
-                                </button>
-                            </div>
-
-                        </div>
-                    @endforeach
-
+                <div class="exception-dropdown-header">
+                    Active Exceptions
                 </div>
-            @endif
 
-        </button>
+                @foreach($this->exceptions as $exception)
+                    <div class="exception-item" wire:key="exc-{{ $exception->id }}">
+
+                        <div class="exception-item-top">
+                            <span class="exception-item-id">{{ $exception->load_number }}</span>
+                            <span class="exception-item-time">{{ $this->formatTime($exception->updated_at) }}</span>
+                        </div>
+
+                        <div class="exception-item-issue">
+                            {{ $this->formatIssue($exception->status, $exception->is_delayed, $exception->delay_minutes) }}
+                        </div>
+
+                        <div class="exception-item-driver">
+                            {{ $exception->driver?->user?->name ?? 'Unassigned' }}
+                            @if($exception->driver?->phone)
+                                · {{ $exception->driver->phone }}
+                            @endif
+                        </div>
+
+                        <div class="exception-item-actions">
+                            <button class="exception-action-btn"
+                                wire:click="$dispatch('open-assignment-modal', { loadId: {{ $exception->id }} })">
+                                Reassign
+                            </button>
+                            <button class="exception-action-btn"
+                                wire:click="$dispatch('contact-driver', { loadId: {{ $exception->id }} })">
+                                Contact
+                            </button>
+                        </div>
+
+                    </div>
+                @endforeach
+
+            </div>
+
+        </div>
+
     @endif
 
 </div>
